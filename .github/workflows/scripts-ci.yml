@@ -1,0 +1,19 @@
+name: Scripts CI
+#  (CRISP-DM: Modeling)
+
+on:
+  push:
+    branches: [scripts-src]
+  pull_request:
+    branches: [scripts-src]
+
+jobs:
+  test-modules:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Python modules
+        run: |
+          echo "Running CRISP-DM Modeling phase checks..."
+          pip install -r requirements.txt
+          pytest scripts/src/

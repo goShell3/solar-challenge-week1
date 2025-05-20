@@ -12,6 +12,7 @@ class SolarFeatureEngineering:
         self.df = df
 
     def add_time_features(self):
+        
         self.df['Timestamp'] = pd.to_datetime(self.df['Timestamp'])
         self.df['hour'] = self.df['Timestamp'].dt.hour
         self.df['day_of_week'] = self.df['Timestamp'].dt.dayofweek
@@ -19,13 +20,14 @@ class SolarFeatureEngineering:
         self.df['month'] =self.df['Timestamp'].dt.month
         self.df['week_of_year'] = self.df['Timestamp'].dt.isocalendar().week
         self.df['is_weekend'] = self.df['day_of_week'].isin([5,6]).astype(int)
+        
         self.df['season'] = (self.df['month']%12 + 3)//3  # 1=winter, 2=spring, etc.
         self.df['solar_time'] = self.df['hour'] + (self.df['Timestamp'].dt.longitude/15)
         
         return self.df
     
+    # 
     # solar position feature 
-    
     def add_solar_position_features(self):
         pass 
     

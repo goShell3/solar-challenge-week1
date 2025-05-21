@@ -13,7 +13,7 @@ from .generate_report import generate_report
 from .visualization import SolarVisualizer
 
 
-from featuring import (
+from .featuring import (
     TimeFeatureExtractor,
     SolarFeatureGenerator,
    

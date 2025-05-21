@@ -16,38 +16,63 @@ class SolarDataCleaner:
         self.outlier_flags = None
         self.cleaning_report = {}
         
-    def handle_missing_values(self, max_null_percentage: float = 5.0) -> 'SolarDataCleaner':
-        """
-        Handle missing values by either dropping or interpolating
+    # def handle_missing_values(self, max_null_percentage: float = 5.0) -> 'SolarDataCleaner':
+    #     """
+    #     Handle missing values by either dropping or interpolating
         
-        Args:
-            max_null_percentage: Maximum allowed percentage of nulls in a column
+    #     Args:
+    #         max_null_percentage: Maximum allowed percentage of nulls in a column
             
-        Returns:
-            self for method chaining
-        """
-        # Calculate threshold for dropping columns
-        threshold = len(self.df) * (max_null_percentage / 100)
+    #     Returns:
+    #         self for method chaining
+    #     """
+    #     # Calculate threshold for dropping columns
+    #     threshold = len(self.df) * (max_null_percentage / 100)
         
-        # Before dropping columns
-        original_cols = set(self.df.columns)
+    #     # Before dropping columns
+    #     original_cols = set(self.df.columns)
         
-        # Drop columns with too many nulls
-        self.df = self.df.dropna(axis=1, thresh=threshold)
+    #     # Drop columns with too many nulls
+    #     self.df = self.df.dropna(axis=1, thresh=threshold)
         
-        # Record dropped columns
-        dropped_cols = original_cols - set(self.df.columns)
-        if dropped_cols:
-            self.cleaning_report['dropped_columns'] = list(dropped_cols)
+    #     # Record dropped columns
+    #     dropped_cols = original_cols - set(self.df.columns)
+    #     if dropped_cols:
+    #         self.cleaning_report['dropped_columns'] = list(dropped_cols)
         
-        # Interpolate remaining missing values
+    #     # Interpolate remaining missing values
+    #     self.df = self.df.interpolate(method='time', limit_direction='both')
+        
+    #     # Fill any remaining nulls with median
+    #     numeric_cols = self.df.select_dtypes(include=np.number).columns
+    #     self.df[numeric_cols] = self.df[numeric_cols].fillna(self.df[numeric_cols].median())
+        
+    #     return self
+    
+    def handle_missing_values(self, max_null_percentage=5):
+    # Drop columns with too many nulls
+        null_percent = self.df.isnull().mean() * 100
+        dropped_cols = null_percent[null_percent > max_null_percentage].index
+        self.df.drop(columns=dropped_cols, inplace=True)
+        self.cleaning_report['dropped_columns'] = list(dropped_cols)
+
+        # ✅ Ensure datetime index for time interpolation
+        if not isinstance(self.df.index, pd.DatetimeIndex):
+            if 'Timestamp' in self.df.columns:
+                self.df['Timestamp'] = pd.to_datetime(self.df['Timestamp'])
+                self.df.set_index('Timestamp', inplace=True)
+            else:
+                raise ValueError("DataFrame must have a datetime index or a 'Timestamp' column for time interpolation.")
+
+        # Interpolate time-based missing values
         self.df = self.df.interpolate(method='time', limit_direction='both')
-        
+
         # Fill any remaining nulls with median
         numeric_cols = self.df.select_dtypes(include=np.number).columns
         self.df[numeric_cols] = self.df[numeric_cols].fillna(self.df[numeric_cols].median())
-        
+
         return self
+
     
     def handle_outliers(self, columns: List[str], method: str = 'zscore', 
                        z_threshold: float = 3.0, iqr_factor: float = 1.5) -> 'SolarDataCleaner':

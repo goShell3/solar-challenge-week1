@@ -12,9 +12,18 @@ from .data_cleaner import SolarDatacleaner
 from.generate_report import generate_report
 from .visualization import SolarVisualizer
 
+
+from featuring import (
+    TimeFeatureExtractor,
+    SolarFeatureGenerator,
+   
+)
+
 __all__ = [
     "SolarDatacleaner",
     "generate_report",
     "SolarVisualizer",
+    "TimeFeatureExtractor",
+    "SolarFeatureGenerator"
 ]
 

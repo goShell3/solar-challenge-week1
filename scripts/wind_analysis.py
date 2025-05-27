@@ -2,6 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from windrose import WindroseAxes
+import seaborn as sns
 
 def plot_wind_rose(df):
     """Plot wind rose using wind speed and direction"""

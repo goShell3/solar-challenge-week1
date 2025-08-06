@@ -114,10 +114,11 @@ plot_comparison_boxplots(
 
 ```markdown
 ### Comparative Insights
+1. Highest Potential: Sierra Leone shows the highest median GHI at approximately 490 W/m², closely followed by Benin.
 
-1. **Highest Potential**: [Country] shows the highest median GHI at [X] W/m²
-2. **Consistency**: [Country] demonstrates the most stable radiation (IQR = [X])
-3. **Atmospheric**: [Country]'s low DHI/DNI ratio suggests [characteristic]
+2. Consistency: Togo demonstrates the most stable radiation (IQR ≈ 400 W/m²), indicating less variability in total irradiance.
+
+3. Atmospheric: Togo's low DNI compared to GHI (high DHI/DNI ratio) suggests more diffuse sunlight, likely due to frequent cloud cover or atmospheric scattering.
 ```
 
 ## 🔍 Further Analysis Suggestions
